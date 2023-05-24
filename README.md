@@ -1,4 +1,4 @@
-Bio-SoS: A biological system of systems based simulation framework for iPSC culture.
+Bio-SoS: A biological system of systems based simulation framework for iPSC cultures.
 ===========
 [![zheng](https://img.shields.io/badge/Author-Zheng.H-yellow)](https://zhenghuazx.github.io/hua.zheng/)
 
