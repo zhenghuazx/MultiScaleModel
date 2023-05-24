@@ -139,7 +139,7 @@ def reaction_diffusion(agg_simulator, parameters, arg):
     has_legend_outside = False
     for l, label in enumerate(meta_label):
         for i, size in enumerate(sizes):
-            ini_intra_metabolites = agg_simulator.results[24].copy()
+            ini_intra_metabolites = agg_simulator.results[48].copy()
             agg = CellModel(
                 size,
                 ini_intra_metabolites,

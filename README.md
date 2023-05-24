@@ -116,47 +116,63 @@ plt.show()
 ![img.png](asset/lac.png)
 
 ## Bio-SoS Result Reproduction
-1(a). Generate temporal size distribution of aggregation population balance model (PBM) by using pretrained model (`-pretrained_pbm True`)
+1(a). Generate temporal size distribution of aggregation population balance model (PBM) by using pretrained model 
+(`-pretrained_pbm True`). (Fig. 2a and Fig. 2b)
 ```shell
 python main.py -pbm True -pretrained_pbm True
 ```
-1(b). Generate temporal size distribution of aggregation population balance model (PBM) without 
-using pretrained model (`-pretrained_pbm False`). The parameter estimation can take more than 12 hours.
+1(b). Generate temporal size distribution of aggregation population balance model (PBM) without using pretrained model 
+(`-pretrained_pbm False`). The parameter estimation can take more than 12 hours.(Fig. 2a and Fig. 2b)
 ```shell
 python main.py -pbm True -pretrained_pbm True
 ```
-2. Perform Biomass yield and variance analysis.
+![Alt text](multi_scale_model/result/PBM/mean_curve.svg)
+![Alt text](multi_scale_model/result/PBM/radius-600-hour-24.svg)
+![Alt text](multi_scale_model/result/PBM/radius-600-hour-48.svg)
+![Alt text](multi_scale_model/result/PBM/radius-600-hour-72.svg)
+2. Perform Biomass yield and variance analysis (Fig. 8).
 ```shell
 python main.py -size True
 ```
-3. Analyze iPS cell health condition.
+![Alt text](multi_scale_model/result/variance-component-analysis/mean-variance-24.svg)
+![Alt text](multi_scale_model/result/variance-component-analysis/mean-variance-48.svg)
+![Alt text](multi_scale_model/result/variance-component-analysis/mean-variance-72.svg)
+3. Analyze iPS cell health condition (Fig. 5).
 ```shell
 python main.py -ch True
 ```
-4. Generate the figure for metabolic heterogeneity of aggregates of varying sizes.
+![Alt text](multi_scale_model/result/unhealthy/Lac-40-2.5.svg)
+![Alt text](multi_scale_model/result/unhealthy/Glc-40-2.5.svg)
+4. Generate the figure for metabolic heterogeneity of aggregates of varying sizes (Fig. 7).
 ```shell
 python main.py -m True
 ```
-5. Perform variance component analysis.
-```shell
-python main.py -v True
-```
-6. Comparison between predicted metabolite concentrations from a single-cell mechanistic model and a multi-scale model with experimentally measured bulk metabolite concentrations.
+![Alt text](multi_scale_model/result/flux_rate/relative_flux.svg)
+![Alt text](multi_scale_model/result/flux_rate/relative_flux.svg)
+5. Comparison between predicted metabolite concentrations from a single-cell mechanistic model and a multi-scale model with experimentally measured bulk metabolite concentrations. (Fig. 3)
 ```shell
 python main.py -c True
 ```
-7. Metabolic heterogeneity. Reaction flux rates and extracellular metabolite concentrations with various aggregates ranging from 30 μm to 600 μm in radius.
+![Alt text](multi_scale_model/result/simulation-with-agg/HGLL-NH4-draw_measurement-True.svg)
+6. Metabolic heterogeneity. Reaction flux rates and extracellular metabolite concentrations with various aggregates ranging from 30 μm to 600 μm in radius. (Fig. 6)
 ```shell
 python main.py -f True
 ```
-8. Generate steady state concentration profiles at 48 hours (Fig. 2c).
+![Alt text](multi_scale_model/result/optimal_size/Biomass-metabolites-ala-0.1.svg)
+![Alt text](multi_scale_model/result/optimal_size/Biomass-reaction-ala-0.1.svg)
+7. Generate steady state concentration profiles at 48 hours (Fig. 2c).
 ```shell
 python main.py -ss True
 ```
-9. validation metabolite consumption in a bioreactor culture of iPSCs (Fig. 4).
+![Alt text](multi_scale_model/result/reaction-diffusion/GLC.svg)
+![Alt text](multi_scale_model/result/reaction-diffusion/ELAC.svg)
+
+8. validation metabolite consumption in a bioreactor culture of iPSCs (Fig. 4).
 ```shell
 python main.py -val True
 ```
+![Alt text](multi_scale_model/result/validation-Kwok2017/HGLL-GLC-with-err.svg)
+![Alt text](multi_scale_model/result/validation-Kwok2017/HGLL-Lac-with-err.svg)
 
 # Contact
 If you have any questions, or just want to chat about using the package,
