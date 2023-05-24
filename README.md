@@ -1,36 +1,33 @@
-RNA-LifeTIme: A deep learning framework for RNA lifetime prediction.
+Bio-SoS: A biological system of systems based simulation framework for iPSC culture.
 ===========
 [![zheng](https://img.shields.io/badge/Author-Zheng.H-yellow)](https://zhenghuazx.github.io/hua.zheng/)
 
-**Cite us**: Hua Zheng, Wei Xie, Paul Whitford, Ailun Wang, Chunsheng Fang, Wandi Xu. (2023). _Structure-Function Dynamics Hybrid Modeling: RNA Degradation_. arXiv preprint arXiv:2305.03925.
 
+Bio-SoS is a package for simulating iPSC cultures under different conditions.
 
-
-RNA-LifeTIme is a package for RNA lifetime prediction task written in pytorch. **The MD simulation data will be available in June.**
-
-Predicting RNA degradation dynamics based on its 3D conformation remains a challenge due to the underdeveloped 
-methodologies for modeling tertiary structure input. Current state-of-the-art RNA degradation predictive models 
-primarily concentrate on primary and secondary structure information. Our paper provides a novel architecture for 
-modeling the RNA unfolding process.
-![](assets/degradtion_processing.png)
-
-The lifetime of a native contact quantifies the importance of an individual inter-residue contact in the 
-protein/RNA folding mechanism. We adopt this concept and apply it to RNA degradation process
-(Figure above) by studying the trajectory of fraction of native contacts, i.e., the ratio of the number of 
-contacts present in the current structure to the number of contacts in the native structure.
-
+Large-scale manufacturing of induced pluripotent stem cells (iPSCs) is essential for cell therapies and regenerative 
+medicines. Yet, the self-aggregation iPSCs can generate large cell aggregates in suspension bioreactors, resulting in 
+insufficient nutrient supply and extra metabolic waste build-up for the cells located at core. Since subtle changes in 
+micro-environment can lead to cell stress and heterogeneous cell population, a novel Biological System-of-Systems 
+(Bio-SoS) framework is proposed to characterize cell-to-cell interactions, spatial heterogeneity, and cell response to 
+micro-environmental variation. Building on iPSC stochastic metabolic reaction network, aggregation kinetics, and 
+reaction-diffusion mechanisms, the Bio-SoS model can quantify the impact of factors (i.e., aggregate size) on cell 
+product health and quality heterogeneity, accounting for causal interdependencies at individual cell, aggregate, and 
+cell population levels. The proposed framework can accurately predict iPSC culture conditions for both monolayer and 
+aggregate cultures, where these predictions can be leveraged to ensure that the culture process follows an expected 
+trajectory for successful cell growth and expansion. 
 
 Installation
 ======================================
-If you would like to build the library from the source code, then at the root `/RNA-LifeTime`, run
+To create a virtual environment, decide upon a directory where you want to place it, and run the venv module as a 
+script with the directory path:
 ```shell
-pip install build
-python -m build
+python3 -m venv venv
+source venv/bin/activate
 ```
-Then install RNA-LifeTime and clean up the directory
+Use pip to install all required dependencies
 ```shell
-pip install dist/RNA_LifeTime-1.0.0-py3-none-any.whl
-rm -r dist
+pip install -r requirements.txt
 ```
 Usage
 ======================================
@@ -64,13 +61,6 @@ optional arguments:
 
 Example
 ===========
-
-```python
-python main.py -e 15 -b 512 -lr 0.003 -c ./MD-simulation/models/ -m RNA-LifeTime -p ./MD-simulation/ -f False -g 3 -l 72 -t False -d 0.2 -r 1 --step 3 --gamma 0.3
-```
-![img.png](assets/training.png)
-
-
 ## Bio-SoS Simulation example in Python Console
 ```python
 import pickle
