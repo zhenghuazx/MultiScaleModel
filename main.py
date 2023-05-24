@@ -547,7 +547,7 @@ def run(arg):
     if arg.inner_outer_cell_metabolism:
         ''' Generate the inner and outer cell metabolism. The data will generate and save to 'multi_scale_model/result/flux_rate/'
         '''
-        hours = 48
+        hours = 73
         agg_density_function = get_aggregation_profile(no_aggregate=False, bioreactor=True)
         test_index = 1
         x0_LGHL = np.hstack([S1_0 * 1000 * mean_whole[test_index][0, -1], mean_whole[test_index][0]])
