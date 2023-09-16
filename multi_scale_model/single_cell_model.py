@@ -244,7 +244,7 @@ if __name__ == '__main__':
 
 
     # run 24 hours
-    agg_density_function = get_aggregation_profile(no_aggregate=False, bioreactor=True)
+    agg_density_function = get_aggregation_profile(no_aggregate=False, bioreactor=False)
     agg_simulator, _ = run_simulation(48, 1, mean_whole, cell_growth_rate, agg_density_function, meta_index,
                                       single_cell_radius, parameters, diffusion_coef, porosity, 1, cal_variance=False)
 
@@ -344,17 +344,29 @@ if __name__ == '__main__':
 
     plt.rcParams.update({'font.size': 11})
     fig, ax = plt.subplots()
+    sizes_new = []
+    for i, s in enumerate(sizes):
+        if i % 4 != 0:
+            sizes_new.append(None)
+        else:
+            sizes_new.append(s)
+    lac_conc_new = []
+    for i, s in enumerate(lac_conc):
+        if i % 2 != 0:
+            lac_conc_new.append(None)
+        else:
+            lac_conc_new.append(s)
     ax = sns.heatmap(heatmap * 100, cmap=list(reversed(sns.color_palette("RdBu", 10))), annot=False, vmin=0, vmax=100,
-                     linewidth=0.5, xticklabels=sizes, yticklabels=lac_conc)
+                     linewidth=0.5, xticklabels=sizes_new, yticklabels=lac_conc_new)
     plt.xlabel(r'Aggregate Radius ($\mu$m)', fontsize=14)
-    plt.ylabel('Lactate Concentration (mM)', fontsize=14)
+    plt.ylabel('Bulk Lactate Concentration (mM)', fontsize=14)
     ax.collections[0].colorbar.set_label("Unhealthy Cells (%)", fontsize=14)
-    plt.xticks(fontsize=10)
-    plt.yticks(fontsize=10)
+    plt.xticks(fontsize=11)
+    plt.yticks(fontsize=11)
     plt.tight_layout()
-    plt.savefig("multi_scale_model/result/unhealthy/{}-{}-{}.pdf".format('Lac', lactate_upper, glucose_lower),
+    plt.savefig("multi_scale_model/result/unhealthy/{}-{}-{}-large-font.pdf".format('Lac', lactate_upper, glucose_lower),
                 bbox_inches='tight', format='pdf')
-    plt.savefig("multi_scale_model/result/unhealthy/{}-{}-{}.svg".format('Lac', lactate_upper, glucose_lower),
+    plt.savefig("multi_scale_model/result/unhealthy/{}-{}-{}-large-font.svg".format('Lac', lactate_upper, glucose_lower),
                 bbox_inches='tight', format='svg')
     plt.show()
 
@@ -399,18 +411,31 @@ if __name__ == '__main__':
     import seaborn as sns
 
     fig, ax = plt.subplots()
+    sizes_new = []
+    for i, s in enumerate(sizes):
+        if i % 4 != 0:
+            sizes_new.append(None)
+        else:
+            sizes_new.append(s)
+    glc_conc_new = []
+    for i, s in enumerate(glc_conc):
+        if i % 2 != 0:
+            glc_conc_new.append(None)
+        else:
+            glc_conc_new.append(s)
+
     ax = sns.heatmap(heatmap * 100, cmap=list(reversed(sns.color_palette("RdBu", 10))), annot=False, vmin=0, vmax=100,
-                     linewidth=0.5, xticklabels=sizes,
-                     yticklabels=glc_conc)
+                     linewidth=0.5, xticklabels=sizes_new,
+                     yticklabels=glc_conc_new)
     plt.xlabel(r'Aggregate Radius ($\mu$m)', fontsize=14)
-    plt.ylabel('Glucose Concentration (mM)', fontsize=14)
+    plt.ylabel('Bulk Glucose Concentration (mM)', fontsize=14)
     ax.collections[0].colorbar.set_label("Unhealthy Cells (%)", fontsize=14)
-    plt.xticks(fontsize=10)
-    plt.yticks(fontsize=10)
+    plt.xticks(fontsize=11)
+    plt.yticks(fontsize=11)
     plt.tight_layout()
-    plt.savefig("multi_scale_model/result/unhealthy/{}-{}-{}.pdf".format('Glc', lactate_upper, glucose_lower),
+    plt.savefig("multi_scale_model/result/unhealthy/{}-{}-{}-large-font.pdf".format('Glc', lactate_upper, glucose_lower),
                 bbox_inches='tight', format='pdf')
-    plt.savefig("multi_scale_model/result/unhealthy/{}-{}-{}.svg".format('Glc', lactate_upper, glucose_lower),
+    plt.savefig("multi_scale_model/result/unhealthy/{}-{}-{}-large-font.svg".format('Glc', lactate_upper, glucose_lower),
                 bbox_inches='tight', format='svg')
     plt.show()
 
@@ -583,11 +608,16 @@ if __name__ == '__main__':
     # plt.title('Average Flux Rates (after standardization)')
     # plt.tight_layout()
     # plt.show()
-
+    sizes_new = []
+    for i, s in enumerate(sizes):
+        if i % 4 != 0:
+            sizes_new.append(None)
+        else:
+            sizes_new.append(s)
     selected_reaction = [0, 7, 9, 24, 25, 27, 32, 33, 35, 36, 38]
     fig, ax = plt.subplots()
     ax = sns.heatmap(heatmap_norm.T[selected_reaction, :], cmap=list(reversed(sns.color_palette("RdBu", 10))),
-                     annot=False, linewidth=0.5, xticklabels=sizes,
+                     annot=False, linewidth=0.5, xticklabels=sizes_new,
                      yticklabels=np.array(agg.flux_rate_solver.reaction)[selected_reaction])
     plt.xlabel(r'Aggregate Radius ($\mu$m)', fontsize=14)
     plt.title('Averaged Flux Rates (after standardization)')
@@ -600,7 +630,7 @@ if __name__ == '__main__':
 
     fig, ax = plt.subplots()
     ax = sns.heatmap(heatmap_ser_norm.T, cmap=list(reversed(sns.color_palette("RdBu", 10))), annot=False, linewidth=0.5,
-                     xticklabels=sizes, yticklabels=meta_label)
+                     xticklabels=sizes_new, yticklabels=meta_label)
     plt.xlabel(r'Aggregate Radius ($\mu$m)', fontsize=14)
     plt.title('Averaged Extracellular Metabolite Concentrations \n (after standardization)')
     plt.tight_layout()
@@ -816,7 +846,7 @@ if __name__ == '__main__':
         rsd = []
         colormap = mpl.cm.tab10.colors
         mpl.cm.get_cmap()
-        cur_hour = 24
+        cur_hour = 48
         for _ in range(10):
             var_metabolite, between_shell_covs, sample_means = [], [], []
             sizes = np.arange(30, 601, 15)  # 15 * np.array([4, 8, 12, 16, 20, 24, 28, 32, 36, 40])
@@ -857,10 +887,10 @@ if __name__ == '__main__':
 
         fig, ax = plt.subplots()
 
-        ax.plot(sizes, np.mean(mr_biomass_mean, axis=0), '-', color=colormap[0], alpha=1, linewidth=3,
+        ax.plot(sizes[:20], np.mean(mr_biomass_mean, axis=0)[:20], '-', color=colormap[0], alpha=1, linewidth=3,
                 label=r'E[$\Delta$ biomass]')
-        ax.fill_between(sizes, np.mean(mr_biomass_mean, axis=0) - np.std(mr_biomass_mean, axis=0),
-                        np.mean(mr_biomass_mean, axis=0) + np.std(mr_biomass_mean, axis=0),
+        ax.fill_between(sizes[:20], np.mean(mr_biomass_mean, axis=0)[:20] - np.std(mr_biomass_mean, axis=0)[:20],
+                        np.mean(mr_biomass_mean, axis=0)[:20] + np.std(mr_biomass_mean, axis=0)[:20],
                         color=colormap[0], alpha=.1)
         # plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0., ncol=4)
         ax.grid(axis='x', color='0.95')
@@ -868,19 +898,29 @@ if __name__ == '__main__':
         # ax2.ticklabel_format(style='scientific')
         ax2.ticklabel_format(style='sci', scilimits=(-3, 4), axis='both', useMathText=True)
         # ax2.xaxis.major.formatter._useMathText = True
-        ax2.plot(sizes, np.mean(rsd, axis=0), '-', color=colormap[3], alpha=1, linewidth=3,
+        ax2.plot(sizes[:20], np.mean(rsd, axis=0)[:20], '-', color=colormap[3], alpha=1, linewidth=3,
                  label=r'Var[$\Delta$ biomass]')
-        ax2.fill_between(sizes, np.mean(rsd, axis=0) - np.std(rsd, axis=0),
-                         np.mean(rsd, axis=0) + np.std(rsd, axis=0),
+        ax2.fill_between(sizes[:20], np.mean(rsd, axis=0)[:20] - np.std(rsd, axis=0)[:20],
+                         np.mean(rsd, axis=0)[:20] + np.std(rsd, axis=0)[:20],
                          color=colormap[3], alpha=.2)
         # ax2.set_ylabel("Measured (FSiPSC, Kwok et al, 2017)", color="blue", fontsize=14)
-        ax.set_xlabel('Aggregate Radius ' + r'($\mu$m)', fontsize=14)
-        ax.set_ylabel('Mean Biomass Production \n (nmol/$10^6$ cells/h)', color=colormap[0], fontsize=14)
+        ax.set_xlabel('Aggregate Radius ' + r'($\mu$m)', fontsize=17)
+        ax.set_ylabel('Mean Biomass Production \n (nmol/$10^6$ cells/h)', color=colormap[0], fontsize=17)
+        # ax.set_yticks([0, 5, 10, 15, 20, 25, 30], fontsize=40)
+        # ax2.set_yticks([0, 200, 400, 600, 800, 1000, 1200, 1400, 1600], fontsize=40)
+        # plt.xticks([0, 100, 200, 300, 400, 500, 600], fontsize=40)
+        for label in ax.xaxis.get_majorticklabels():
+            label.set_fontsize(13)
+        for label in ax.yaxis.get_majorticklabels():
+            label.set_fontsize(13)
+        for label in ax2.yaxis.get_majorticklabels():
+            label.set_fontsize(13)
+            # label.set_fontname('courier')
         ax2.set_ylabel('Relative Standard Deviation (%) of \n Biomass Production in One Hour', color=colormap[3],
-                       fontsize=14)
+                       fontsize=17)
         plt.tight_layout()
-        # plt.savefig("multi_scale_model/result/variance-component-analysis/{}-{}.pdf".format('mean-variance', cur_hour),
-        #             bbox_inches='tight', format='pdf')
-        # plt.savefig("multi_scale_model/result/variance-component-analysis/{}-{}.svg".format('mean-variance', cur_hour),
-        #             bbox_inches='tight', format='svg')
+        plt.savefig("multi_scale_model/result/variance-component-analysis/large-{}-{}.pdf".format('mean-variance', cur_hour),
+                    bbox_inches='tight', format='pdf')
+        plt.savefig("multi_scale_model/result/variance-component-analysis/large-{}-{}.svg".format('mean-variance', cur_hour),
+                    bbox_inches='tight', format='svg')
         plt.show()
