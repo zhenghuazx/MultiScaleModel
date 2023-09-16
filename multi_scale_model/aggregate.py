@@ -382,23 +382,23 @@ if __name__ == '__main__':
         ax.plot(np.array(range(hours)), np.array(agg_simulator.results)[:hours, meta_label_index['ELAC'][0]],
                 color=sns.color_palette("tab10", 7)[3],
                 linewidth=3, label='Multi-scale model (K3 iPSC)')
-        ax.set_title('Lactate Concentration (mM)', fontsize=16)
-        ax.set_xlabel('Time (h)')
-        ax.set_ylabel('Predicted by multi-scale model\n(K3 iPSC, Odenwelder et al, 2020)',
+        # ax.set_title('Lactate Concentration (mM)', fontsize=16)
+        ax.set_xlabel('Time (h)', fontsize=14)
+        ax.set_ylabel('Predicted Lactate Concentration (mM)',
                       color=sns.color_palette("tab10", 7)[3], fontsize=14)
         ax2 = ax.twinx()
         plt.xticks(list(range(0, hours + 1, 12)))
         if plot_err:
-            ax.set_ylim(-2, 40.5)
+            ax.set_ylim(-2, 39)
         ax2.scatter([0, 48, 96, 120, 144], [0, 7.5, 11.8, 13.5, 14.7], color=sns.color_palette("tab10", 7)[0],
-                    marker="X",
-                    s=100,
-                    label='Measured (FSiPSC, Kwok et al, 2017)')
+                    marker="o",
+                    s=150,
+                    label='Measurements (FSiPSC, Kwok et al, 2017)')
         if plot_err:
             ax2.errorbar([0, 48, 96, 120, 144], np.array([0, 7.5, 11.8, 13.5, 14.7]), yerr=err, fmt='o',
                          color=sns.color_palette("tab10", 7)[0],
-                         capsize=2)
-        ax2.set_ylabel("Measured (FSiPSC, Kwok et al, 2017)", color=sns.color_palette("tab10", 7)[0], fontsize=14)
+                         capsize=6)
+        ax2.set_ylabel("Measured Lactate Concentration (mM)", color=sns.color_palette("tab10", 7)[0], fontsize=14)
         plt.xticks(list(range(0, hours + 1, 12)))
         if plot_err:
             plt.savefig("multi_scale_model/result/validation-Kwok2017/{}-{}-with-err.svg".format('HGLL', 'Lac'),
@@ -421,25 +421,27 @@ if __name__ == '__main__':
         # i = 42
         x0_LGHL = np.hstack([S1_0 * 1000 * mean_whole[test_index][0, -1], mean_whole[test_index][0]])
         ax.plot(np.array(range(hours)),
-                np.array(agg_simulator.results)[:hours, meta_label_index['GLC'][0]] * 180.156 / 1000, color=sns.color_palette("tab10", 7)[3],
+                np.array(agg_simulator.results)[:hours, meta_label_index['GLC'][0]] * 180.156 / 1000,
+                color=sns.color_palette("tab10", 7)[3],
                 # * 180.156 / 1000
                 linewidth=3, label='Multi-scale model (K3 iPSC)')
-        ax.set_title('Glucose Concentration (g/L)', fontsize=16)
-        ax.set_xlabel('Time (h)')
-        ax.set_ylabel('Predicted by multi-scale model\n(K3 iPSC, Odenwelder et al, 2020)', color=sns.color_palette("tab10", 7)[3], fontsize=14)
+        # ax.set_title('Glucose Concentration (g/L)', fontsize=16)
+        ax.set_xlabel('Time (h)', fontsize=14)
+        ax.set_ylabel('Predicted Glucose Concentration (g/L)', color=sns.color_palette("tab10", 7)[3], fontsize=14)
 
         ax2 = ax.twinx()
         if plot_err:
-            ax.set_ylim(-0.1, 3.5)
+            ax.set_ylim(-0.05, 3.5)
             # ax.set_ylim(0, 20)
 
-        ax2.scatter([0, 48, 96, 120, 144], np.array([350, 275, 205, 192.5, 180]) / 100, color=sns.color_palette("tab10", 7)[0], marker="X", s=100,
-                    label='Measured (FSiPSC, Kwok et al, 2017)')
+        ax2.scatter([0, 48, 96, 120, 144], np.array([350, 275, 205, 192.5, 180]) / 100,
+                    color=sns.color_palette("tab10", 7)[0], marker="o", s=150,
+                    label='Measurements (FSiPSC, Kwok et al, 2017)')
         if plot_err:
             ax2.errorbar([0, 48, 96, 120, 144], np.array([350, 275, 205, 192.5, 180]) / 100, yerr=err, fmt='o',
-                         color=sns.color_palette("tab10", 7)[0], capsize=2)
+                         color=sns.color_palette("tab10", 7)[0], capsize=6)
         ax2.set_ylim(1.6, 3.57)
-        ax2.set_ylabel("Measured (FSiPSC, Kwok et al, 2017)", color=sns.color_palette("tab10", 7)[0], fontsize=14)
+        ax2.set_ylabel("Measured Glucose Concentration (g/L)", color=sns.color_palette("tab10", 7)[0], fontsize=14)
         plt.xticks(list(range(0, hours + 1, 12)))
         if plot_err:
             plt.savefig("multi_scale_model/result/validation-Kwok2017/{}-{}-with-err.svg".format('HGLL', 'GLC'),

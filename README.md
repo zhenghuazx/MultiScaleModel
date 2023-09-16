@@ -86,7 +86,6 @@ else:
 # Load initial metabolite concentrations of iPSC cell culture
 data_whole, mean_whole, std_whole = get_data('dynamic_model/iPSC_data.xlsx')
 
-
 x0_LGHL = np.hstack([S2_0 * 1000 * mean_whole[test_index][0, -1], mean_whole[test_index][0]])
 agg_simulator = Aggregate(cell_growth_rate, agg_density_function, meta_index, x0_LGHL,
                           single_cell_radius, parameters, diffusion_coef, porosity, delta_t=1)

@@ -61,7 +61,7 @@ def get_health_condition(agg_simulator, parameters, arg):
     ax = sns.heatmap(heatmap * 100, cmap=list(reversed(sns.color_palette("RdBu", 10))), annot=False, vmin=0, vmax=100,
                      linewidth=0.5, xticklabels=sizes, yticklabels=lac_conc)
     plt.xlabel(r'Aggregate Radius ($\mu$m)', fontsize=14)
-    plt.ylabel('Lactate Concentration (mM)', fontsize=14)
+    plt.ylabel('Bulk Lactate Concentration (mM)', fontsize=14)
     ax.collections[0].colorbar.set_label("Unhealthy Cells (%)", fontsize=14)
     plt.xticks(fontsize=10)
     plt.yticks(fontsize=10)
@@ -117,7 +117,7 @@ def get_health_condition(agg_simulator, parameters, arg):
                      linewidth=0.5, xticklabels=sizes,
                      yticklabels=glc_conc)
     plt.xlabel(r'Aggregate Radius ($\mu$m)', fontsize=14)
-    plt.ylabel('Glucose Concentration (mM)', fontsize=14)
+    plt.ylabel('Bulk Glucose Concentration (mM)', fontsize=14)
     ax.collections[0].colorbar.set_label("Unhealthy Cells (%)", fontsize=14)
     plt.xticks(fontsize=10)
     plt.yticks(fontsize=10)
@@ -217,27 +217,30 @@ def get_standardized_flux_rate(agg_simulator, parameters, arg):
     heatmap_ser_norm = (heatmap_ser - heatmap_ser.mean(axis=0)) / heatmap_ser.std(axis=0)
     selected_reaction = [0, 7, 9, 24, 25, 27, 32, 33, 35, 36, 38]
     fig, ax = plt.subplots()
-    ax = sns.heatmap(heatmap_norm.T[selected_reaction, :], cmap=list(reversed(sns.color_palette("RdBu", 10))),
+    reorder_index = [0, 1, 3, 6, 7, 9, 10, 2, 4, 5, 8]  # we reorder the reaction by grouping forward/backward reaction
+    ax = sns.heatmap(heatmap_norm.T[selected_reaction, :][reorder_index], cmap=list(reversed(sns.color_palette("RdBu", 10))),
                      annot=False, linewidth=0.5, xticklabels=sizes,
-                     yticklabels=np.array(agg.flux_rate_solver.reaction)[selected_reaction])
+                     yticklabels=np.array(agg.flux_rate_solver.reaction)[selected_reaction][reorder_index])
     plt.xlabel(r'Aggregate Radius ($\mu$m)', fontsize=14)
     plt.title('Averaged Flux Rates (after standardization)')
     plt.tight_layout()
-    plt.savefig("multi_scale_model/result/optimal_size/{}-{}-ala-{}.pdf".format('Biomass', 'reaction', ala_conc),
+    plt.savefig("multi_scale_model/result/optimal_size/{}-{}-ordered-ala-{}.pdf".format('Biomass', 'reaction', ala_conc),
                 bbox_inches='tight', format='pdf')
-    plt.savefig("multi_scale_model/result/optimal_size/{}-{}-ala-{}.svg".format('Biomass', 'reaction', ala_conc),
+    plt.savefig("multi_scale_model/result/optimal_size/{}-{}-ordered-ala-{}.svg".format('Biomass', 'reaction', ala_conc),
                 bbox_inches='tight', format='svg')
     plt.show()
 
     fig, ax = plt.subplots()
-    ax = sns.heatmap(heatmap_ser_norm.T, cmap=list(reversed(sns.color_palette("RdBu", 10))), annot=False, linewidth=0.5,
-                     xticklabels=sizes, yticklabels=meta_label)
+    reorder_index = [0, 1, 2, 3, 5, 6, 4, 7, 8, 9]  # we reorder the reaction by grouping forward/backward reaction
+    ax = sns.heatmap(heatmap_ser_norm.T[reorder_index], cmap=list(reversed(sns.color_palette("RdBu", 10))), annot=False, linewidth=0.5,
+                     xticklabels=sizes, yticklabels=np.array(meta_label)[reorder_index])
     plt.xlabel(r'Aggregate Radius ($\mu$m)', fontsize=14)
+    ax.set_yticklabels(labels=np.array(meta_label)[reorder_index], rotation=0)
     plt.title('Averaged Extracellular Metabolite Concentrations \n (after standardization)')
     plt.tight_layout()
-    plt.savefig("multi_scale_model/result/optimal_size/{}-{}-ala-{}.pdf".format('Biomass', 'metabolites', ala_conc),
+    plt.savefig("multi_scale_model/result/optimal_size/{}-{}-ordered-ala-{}.pdf".format('Biomass', 'metabolites', ala_conc),
                 bbox_inches='tight', format='pdf')
-    plt.savefig("multi_scale_model/result/optimal_size/{}-{}-ala-{}.svg".format('Biomass', 'metabolites', ala_conc),
+    plt.savefig("multi_scale_model/result/optimal_size/{}-{}-ordered-ala-{}.svg".format('Biomass', 'metabolites', ala_conc),
                 bbox_inches='tight', format='svg')
     plt.show()
 
@@ -286,7 +289,7 @@ def run(arg):
     import matplotlib as mpl
     np.random.seed(10)
 
-    porosity = 0.27  # 60 rpm, and 0.229 100 rpm
+    porosity = arg.porosity  # 60 rpm, and 0.229 100 rpm
     cell_growth_rate = 0.043  # 0.04531871789155581
     data_whole, mean_whole, std_whole = get_data('dynamic_model/iPSC_data.xlsx')
 
@@ -337,7 +340,7 @@ def run(arg):
         plt.yticks(fontsize=14)
         plt.xticks(fontsize=14)
         plt.tight_layout()
-        plt.show(bbox_inches='tight')
+        plt.show()
 
         '''Plot '''
         plot_err = True
@@ -356,23 +359,23 @@ def run(arg):
         ax.plot(np.array(range(hours)), np.array(agg_simulator.results)[:hours, meta_label_index['ELAC'][0]],
                 color=sns.color_palette("tab10", 7)[3],
                 linewidth=3, label='Multi-scale model (K3 iPSC)')
-        ax.set_title('Lactate Concentration (mM)', fontsize=16)
-        ax.set_xlabel('Time (h)')
-        ax.set_ylabel('Predicted by multi-scale model\n(K3 iPSC, Odenwelder et al, 2020)',
+        # ax.set_title('Lactate Concentration (mM)', fontsize=16)
+        ax.set_xlabel('Time (h)', fontsize=14)
+        ax.set_ylabel('Predicted Lactate Concentration (mM)',
                       color=sns.color_palette("tab10", 7)[3], fontsize=14)
         ax2 = ax.twinx()
         plt.xticks(list(range(0, hours + 1, 12)))
         if plot_err:
-            ax.set_ylim(-2, 40.5)
+            ax.set_ylim(-2, 39)
         ax2.scatter([0, 48, 96, 120, 144], [0, 7.5, 11.8, 13.5, 14.7], color=sns.color_palette("tab10", 7)[0],
-                    marker="X",
-                    s=100,
-                    label='Measured (FSiPSC, Kwok et al, 2017)')
+                    marker="o",
+                    s=150,
+                    label='Measurements (FSiPSC, Kwok et al, 2017)')
         if plot_err:
             ax2.errorbar([0, 48, 96, 120, 144], np.array([0, 7.5, 11.8, 13.5, 14.7]), yerr=err, fmt='o',
                          color=sns.color_palette("tab10", 7)[0],
-                         capsize=2)
-        ax2.set_ylabel("Measured (FSiPSC, Kwok et al, 2017)", color=sns.color_palette("tab10", 7)[0], fontsize=14)
+                         capsize=6)
+        ax2.set_ylabel("Measured Lactate Concentration (mM)", color=sns.color_palette("tab10", 7)[0], fontsize=14)
         plt.xticks(list(range(0, hours + 1, 12)))
         if plot_err:
             plt.savefig("multi_scale_model/result/validation-Kwok2017/{}-{}-with-err.svg".format('HGLL', 'Lac'),
@@ -394,24 +397,27 @@ def run(arg):
         # i = 42
         x0_LGHL = np.hstack([S1_0 * 1000 * mean_whole[test_index][0, -1], mean_whole[test_index][0]])
         ax.plot(np.array(range(hours)),
-                np.array(agg_simulator.results)[:hours, meta_label_index['GLC'][0]] * 180.156 / 1000, color=sns.color_palette("tab10", 7)[3],
+                np.array(agg_simulator.results)[:hours, meta_label_index['GLC'][0]] * 180.156 / 1000,  # rescaling
+                color=sns.color_palette("tab10", 7)[3],
                 # * 180.156 / 1000
                 linewidth=3, label='Multi-scale model (K3 iPSC)')
-        ax.set_title('Glucose Concentration (g/L)', fontsize=16)
-        ax.set_xlabel('Time (h)')
-        ax.set_ylabel('Predicted by multi-scale model\n(K3 iPSC, Odenwelder et al, 2020)', color=sns.color_palette("tab10", 7)[3], fontsize=14)
+        # ax.set_title('Glucose Concentration (g/L)', fontsize=16)
+        ax.set_xlabel('Time (h)', fontsize=14)
+        ax.set_ylabel('Predicted Glucose Concentration (g/L)', color=sns.color_palette("tab10", 7)[3], fontsize=14)
 
         ax2 = ax.twinx()
         if plot_err:
-            ax.set_ylim(-0.1, 3.5)
+            ax.set_ylim(-0.05, 3.5)
+            # ax.set_ylim(0, 20)
 
-        ax2.scatter([0, 48, 96, 120, 144], np.array([350, 275, 205, 192.5, 180]) / 100, color=sns.color_palette("tab10", 7)[0], marker="X", s=100,
-                    label='Measured (FSiPSC, Kwok et al, 2017)')
+        ax2.scatter([0, 48, 96, 120, 144], np.array([350, 275, 205, 192.5, 180]) / 100,
+                    color=sns.color_palette("tab10", 7)[0], marker="o", s=150,
+                    label='Measurements (FSiPSC, Kwok et al, 2017)')
         if plot_err:
             ax2.errorbar([0, 48, 96, 120, 144], np.array([350, 275, 205, 192.5, 180]) / 100, yerr=err, fmt='o',
-                         color=sns.color_palette("tab10", 7)[0], capsize=2)
+                         color=sns.color_palette("tab10", 7)[0], capsize=6)
         ax2.set_ylim(1.6, 3.57)
-        ax2.set_ylabel("Measured (FSiPSC, Kwok et al, 2017)", color=sns.color_palette("tab10", 7)[0], fontsize=14)
+        ax2.set_ylabel("Measured Glucose Concentration (g/L)", color=sns.color_palette("tab10", 7)[0], fontsize=14)
         plt.xticks(list(range(0, hours + 1, 12)))
         if plot_err:
             plt.savefig("multi_scale_model/result/validation-Kwok2017/{}-{}-with-err.svg".format('HGLL', 'GLC'),
@@ -423,6 +429,7 @@ def run(arg):
                         bbox_inches='tight')
         plt.show()
         plt.clf()
+
     if arg.variance_component_analysis:
         hours = 97
         agg_density_function = get_aggregation_profile(no_aggregate=False, bioreactor=True)
@@ -501,7 +508,7 @@ def run(arg):
                                           cal_variance=False)
         get_standardized_flux_rate(agg_simulator, parameters, arg)
     if arg.get_biomass_yield_variance_analysis:
-        cur_hour_list = [24, 48, 72]
+        cur_hour_list = [0, 6, 12, 18, 24, 30, 36, 42, 48, 54, 60, 66, 72]
         agg_density_function = get_aggregation_profile(no_aggregate=False, bioreactor=True)
         agg_simulator, _ = run_simulation(cur_hour_list[-1] + 1, 1, mean_whole, cell_growth_rate, agg_density_function,
                                           meta_index, arg.single_cell_radius, parameters, diffusion_coef, porosity, 1,
@@ -510,23 +517,24 @@ def run(arg):
             sizes = np.arange(30, 601, 15)
             mr_biomass_mean, rsd = get_biomass_yield_variance_analysis(agg_simulator, parameters, arg, cur_hour)
             fig, ax = plt.subplots()
-            ax.plot(sizes, np.mean(mr_biomass_mean, axis=0), '-', color=colormap[0], alpha=1, linewidth=3,
+            ax.plot(sizes[:20], np.mean(mr_biomass_mean, axis=0)[:20], '-', color=colormap[0], alpha=1, linewidth=3,
                     label=r'E[$\Delta$ biomass]')
-            ax.fill_between(sizes, np.mean(mr_biomass_mean, axis=0) - np.std(mr_biomass_mean, axis=0),
-                            np.mean(mr_biomass_mean, axis=0) + np.std(mr_biomass_mean, axis=0),
+            ax.fill_between(sizes[:20], np.mean(mr_biomass_mean, axis=0)[:20] - np.std(mr_biomass_mean, axis=0)[:20],
+                            np.mean(mr_biomass_mean, axis=0)[:20] + np.std(mr_biomass_mean, axis=0)[:20],
                             color=colormap[0], alpha=.1)
             ax.grid(axis='x', color='0.95')
             ax2 = ax.twinx()
             ax2.ticklabel_format(style='sci', scilimits=(-3, 4), axis='both', useMathText=True)
-            ax2.plot(sizes, np.mean(rsd, axis=0), '-', color=colormap[3], alpha=1, linewidth=3,
+            ax2.plot(sizes[:20], np.mean(rsd, axis=0)[:20], '-', color=colormap[3], alpha=1, linewidth=3,
                      label=r'Var[$\Delta$ biomass]')
-            ax2.fill_between(sizes, np.mean(rsd, axis=0) - np.std(rsd, axis=0),
-                             np.mean(rsd, axis=0) + np.std(rsd, axis=0),
+            ax2.fill_between(sizes[:20], np.mean(rsd, axis=0)[:20] - np.std(rsd, axis=0)[:20],
+                             np.mean(rsd, axis=0)[:20] + np.std(rsd, axis=0)[:20],
                              color=colormap[3], alpha=.2)
-            ax.set_xlabel('Aggregate Radius ' + r'($\mu$m)', fontsize=14)
-            ax.set_ylabel('Mean Biomass Production \n (nmol/$10^6$ cells/h)', color=colormap[0], fontsize=14)
+            ax.set_xlabel('Aggregate Radius ' + r'($\mu$m)', fontsize=17)
+            ax.set_ylabel('Mean Biomass Production \n (nmol/$10^6$ cells/h)', color=colormap[0], fontsize=17)
             ax2.set_ylabel('Relative Standard Deviation (%) of \n Biomass Production in One Hour', color=colormap[3],
-                           fontsize=14)
+                           fontsize=17)
+            ax.set_title('Culture Hour: {}'.format(cur_hour))
             plt.tight_layout()
             plt.savefig("multi_scale_model/result/variance-component-analysis/{}-{}.pdf".format('mean-variance', cur_hour),
                         bbox_inches='tight', format='pdf')
@@ -600,10 +608,10 @@ def run(arg):
                 plt.title("24 Hours                                    48 Hours", fontsize=16)
                 plt.xlabel(r"Flux Rates (nmol/$10^6$ cells/h)", fontsize=16)
                 plt.legend(bbox_to_anchor=(1., 1.15), ncol=5, columnspacing=0.2, labelspacing=0.2, handletextpad=0.2)
-                # plt.savefig("multi_scale_model/result/flux_rate/flux_comparison.svg",
-                #             bbox_inches='tight')
-                # plt.savefig("multi_scale_model/result/flux_rate/flux_comparison.pdf",
-                #             bbox_inches='tight')
+                plt.savefig("multi_scale_model/result/flux_rate/flux_comparison.svg",
+                            bbox_inches='tight')
+                plt.savefig("multi_scale_model/result/flux_rate/flux_comparison.pdf",
+                            bbox_inches='tight')
                 plt.show()
 
             data_extra_raw = pd.read_excel('multi_scale_model/result/flux_rate/result.xlsx', sheet_name="Sheet1")
@@ -814,7 +822,7 @@ if __name__ == "__main__":
 
     parser.add_argument("-p", "--porosity", dest="porosity",
                         help="Set porosity",
-                        default=0.229)
+                        default=0.27)
 
 
     options = parser.parse_args()
