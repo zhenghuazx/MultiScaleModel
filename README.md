@@ -17,6 +17,11 @@ cell population levels. The proposed framework can accurately predict iPSC cultu
 aggregate cultures, where these predictions can be leveraged to ensure that the culture process follows an expected 
 trajectory for successful cell growth and expansion. 
 
+Cite Us
+======================================
+Zheng, H., Harcum, S. W., Pei, J., & Xie, W. (2023). Stochastic Biological System-of-Systems Modelling for iPSC Culture. 
+Commun Biol (Accepted).
+
 Installation
 ======================================
 To create a virtual environment, decide upon a directory where you want to place it, and run the venv module as a 
