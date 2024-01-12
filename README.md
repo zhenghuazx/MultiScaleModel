@@ -19,8 +19,7 @@ trajectory for successful cell growth and expansion.
 
 Cite Us
 ======================================
-Zheng, H., Harcum, S. W., Pei, J., & Xie, W. (2023). Stochastic Biological System-of-Systems Modelling for iPSC Culture. 
-Commun Biol (Accepted).
+Zheng, H., Harcum, S.W., Pei, J. et al. Stochastic biological system-of-systems modelling for iPSC culture. Commun Biol 7, 39 (2024). https://doi.org/10.1038/s42003-023-05653-w
 
 Installation
 ======================================
