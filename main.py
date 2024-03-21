@@ -710,7 +710,7 @@ def run(arg):
         ''' predicted data'''
         # agg_density_function = results[grid]
         plt.rcParams.update({'font.size': 16})
-        for i, h in enumerate([240, 480, 720]):
+        for i, h in enumerate([0, 240, 480, 720]):
             data = agg_density_function.N.y[:, h]
             if i > 0:
                 y = data / np.sum(data)
